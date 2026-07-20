@@ -1,0 +1,317 @@
+/**
+ * ERP Advanced Export Button Scss Sheet
+ * Custom-tailored styles to integrate with Velzon Theme.
+ * Supports: LTR/RTL, Light/Dark configurations, high contrast hover/active states.
+ */
+
+:host {
+  display: inline-block;
+  --vz-item-hover-color: var(--vz-primary, #405189);
+}
+
+.erp-export-container {
+  position: relative;
+  display: inline-block;
+  font-family: inherit;
+  font-weight: 500;
+
+  /* ==========================================
+     RTL vs LTR Layout Handling
+     ========================================== */
+  &.rtl-layout {
+    direction: rtl;
+
+    .btn-icon {
+      margin-left: 8px;
+    }
+
+    .btn-caret {
+      margin-right: 8px;
+    }
+
+    .export-dropdown-menu {
+      left: 0;
+      right: auto;
+      transform-origin: top left;
+    }
+
+    .item-icon-container {
+      margin-left: 12px;
+    }
+
+    .item-arrow-indicator {
+      margin-right: auto;
+      margin-left: 0;
+      transform: scaleX(-1); // Flip default right chevron to point left
+    }
+
+    .dropdown-item:hover .item-arrow-indicator,
+    .dropdown-item:focus .item-arrow-indicator {
+      transform: translateX(-4px) scaleX(-1);
+    }
+  }
+
+  &.ltr-layout {
+    direction: ltr;
+
+    .btn-icon {
+      margin-right: 8px;
+    }
+
+    .btn-caret {
+      margin-left: 8px;
+    }
+
+    .export-dropdown-menu {
+      right: 0;
+      left: auto;
+      transform-origin: top right;
+    }
+
+    .item-icon-container {
+      margin-right: 12px;
+    }
+
+    .item-arrow-indicator {
+      margin-left: auto;
+      margin-right: 0;
+    }
+
+    .dropdown-item:hover .item-arrow-indicator,
+    .dropdown-item:focus .item-arrow-indicator {
+      transform: translateX(4px);
+    }
+  }
+}
+
+/* ==========================================
+   Main Trigger Button Style
+   ========================================== */
+.btn-export-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 18px;
+  min-height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--vz-primary);
+  border: 1px solid var(--vz-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  outline: none;
+  position: relative;
+  overflow: hidden;
+
+  /* Custom glow effect matching primary theme color */
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    opacity: 0.95;
+    box-shadow: 0 4px 12px rgba(var(--vz-primary-rgb, 64, 81, 137), 0.25);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(var(--vz-primary-rgb, 64, 81, 137), 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Transition for when dropdown opens */
+  &.is-open {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    .btn-caret {
+      transform: rotate(180deg);
+    }
+  }
+
+  /* Structural assets */
+  .btn-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .btn-text {
+    line-height: 1;
+  }
+
+  .btn-caret {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+  }
+}
+
+/* ==========================================
+   Interactive Spinner Styles
+   ========================================== */
+.spinner-icon {
+  animation: rotate 2s linear infinite;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  margin-right: 8px;
+
+  & .path {
+    stroke: #ffffff;
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* ==========================================
+   Dropdown Overlay (Glassmorphic Styles)
+   ========================================== */
+.export-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 1000;
+  display: none;
+  min-width: 210px;
+  padding: 6px;
+  margin: 0;
+  list-style: none;
+  border-radius: 8px;
+  background: var(--vz-card-bg-custom, var(--vz-card-bg, #212529));
+  border: 1px solid var(--vz-border-color);
+  box-shadow: var(--vz-dropdown-shadow, 0 8px 32px 0 rgba(0, 0, 0, 0.37));
+  
+  /* Support glassmorphism if client browser supports blur filters */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  pointer-events: none;
+
+  /* Show state triggers custom entry animation */
+  &.show {
+    display: block;
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu-item-wrapper {
+    margin-bottom: 2px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* ==========================================
+   Dropdown Item Buttons
+   ========================================== */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: inherit;
+  color: var(--vz-body-color, #adb5bd);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+
+  /* Hover and Focus States */
+  &:hover, &:focus {
+    background-color: var(--vz-active-hover-bg, rgba(255, 255, 255, 0.08));
+    color: var(--vz-primary);
+    
+    .item-arrow-indicator {
+      color: var(--vz-primary);
+      opacity: 1;
+    }
+  }
+
+  /* Customize icons to match required brand accents */
+  .item-icon-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: transform 0.2s ease;
+
+    /* Specific coloring triggers using Velzon variables */
+    &.text-success {
+      color: var(--vz-success);
+      background-color: rgba(10, 179, 156, 0.1);
+    }
+
+    &.text-danger {
+      color: var(--vz-danger);
+      background-color: rgba(240, 101, 72, 0.1);
+    }
+
+    &.text-info {
+      color: var(--vz-info);
+      background-color: rgba(41, 156, 219, 0.1);
+    }
+
+    &.text-dark {
+      color: var(--vz-dark, #212529);
+      background-color: rgba(33, 37, 41, 0.1);
+    }
+  }
+
+  &:hover .item-icon-container,
+  &:focus .item-icon-container {
+    transform: scale(1.08);
+  }
+
+  .item-label {
+    flex-grow: 1;
+    line-height: 1;
+  }
+
+  .item-arrow-indicator {
+    font-size: 14px;
+    color: var(--vz-text-muted, #cbd5e1);
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+  }
+}

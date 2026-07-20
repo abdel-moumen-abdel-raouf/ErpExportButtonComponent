@@ -1,0 +1,6 @@
+{
+  "name": "ERP Export Button Component",
+  "description": "An interactive playground and documentation for the ErpExportButtonComponent Angular component.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

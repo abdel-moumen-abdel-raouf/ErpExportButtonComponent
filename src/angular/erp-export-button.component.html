@@ -1,0 +1,79 @@
+<!--
+  ERP Advanced Export Button HTML Template
+  Supports: RTL, High Accessibility (ARIA standards), and Velzon theme variables.
+-->
+<div class="erp-export-container" [class.rtl-layout]="dir === 'rtl'" [class.ltr-layout]="dir === 'ltr'">
+  
+  <!-- Main Export Button Trigger -->
+  <button
+    #mainButton
+    id="erp-export-main-trigger"
+    type="button"
+    class="btn-export-main"
+    [class.is-loading]="isExporting"
+    [class.is-open]="isOpen"
+    [disabled]="disabled || isExporting"
+    [attr.aria-haspopup]="'true'"
+    [attr.aria-expanded]="isOpen"
+    [attr.aria-controls]="'erp-export-dropdown-menu'"
+    [attr.aria-label]="isExporting ? loadingText : buttonText"
+    (click)="toggleDropdown($event)"
+  >
+    <!-- Normal State Content -->
+    <ng-container *ngIf="!isExporting">
+      <i class="ri-download-2-line btn-icon" aria-hidden="true"></i>
+      <span class="btn-text">{{ buttonText }}</span>
+      <i class="ri-arrow-down-s-line btn-caret" aria-hidden="true"></i>
+    </ng-container>
+
+    <!-- Loading State Content -->
+    <ng-container *ngIf="isExporting">
+      <svg class="spinner-icon" viewBox="0 0 50 50" aria-hidden="true">
+        <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+      </svg>
+      <span class="btn-text loading-text">{{ loadingText }}</span>
+    </ng-container>
+  </button>
+
+  <!-- Dropdown Menu Options (with glassmorphism/soft shadows styling) -->
+  <ul
+    #dropdownMenu
+    id="erp-export-dropdown-menu"
+    class="export-dropdown-menu"
+    [class.show]="isOpen"
+    role="menu"
+    aria-labelledby="erp-export-main-trigger"
+  >
+    <li 
+      *ngFor="let option of options; let i = index" 
+      role="none"
+      class="menu-item-wrapper"
+    >
+      <button
+        type="button"
+        class="dropdown-item"
+        role="menuitem"
+        [tabindex]="isOpen ? 0 : -1"
+        [attr.aria-label]="dir === 'rtl' ? option.labelAr : option.labelEn"
+        (click)="selectOption(option.id)"
+        (keydown.enter)="selectOption(option.id)"
+        (keydown.space)="$event.preventDefault(); selectOption(option.id)"
+      >
+        <!-- Icon Container with Custom Specified Color -->
+        <span class="item-icon-container" [ngClass]="option.colorClass">
+          <i [class]="option.icon" aria-hidden="true"></i>
+        </span>
+        
+        <!-- Label based on layout direction -->
+        <span class="item-label">
+          {{ dir === 'rtl' ? option.labelAr : option.labelEn }}
+        </span>
+
+        <!-- Right Aligned Arrow Indicator (Keyboard friendly visual feedback) -->
+        <span class="item-arrow-indicator">
+          <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+        </span>
+      </button>
+    </li>
+  </ul>
+</div>
